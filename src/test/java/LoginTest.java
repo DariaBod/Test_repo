@@ -1,9 +1,15 @@
+import io.qameta.allure.Attachment;
+import io.qameta.allure.Step;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class LoginTest {
@@ -18,6 +24,7 @@ public class LoginTest {
      * осуществление первоначальной настройки
      */
     @BeforeClass
+    @Step("1. Открытие сайта Яндекс Маркет в окне браузера Google Chrome")
     public static void setup() {
         System.setProperty("webdriver.chrome.driver", ConfProperties.getProperty("chromedriver"));
         //создание экземпляра драйвера
@@ -36,22 +43,23 @@ public class LoginTest {
 
     @Test
     public static void loginTest() {
-        //вводим название продукта
         SearchPage.inputNameOfProduct(ConfProperties.getProperty("productname"));
-        //нажимаем кнопку "найти"
         SearchPage.clickFindBtn();
-        ResultsPage.printResults();
-        ResultsPage.verificationOfResults();
+        ArrayList<String> list=ResultsPage.printResults();
+        for (int i = 0; i < list.size(); i++)
+            System.out.println(list.get(i));
+        System.out.println(ResultsPage.verificationOfResults());
         ResultsPage.sortByPrice();
         ResultsPage.clickOnFirstResult();
         ProductPage.switchToNewTab();
-        ProductPage.customerName();
-        ProductPage.productPrice();
+        System.out.println(ProductPage.customerName());
+        System.out.println(ProductPage.productPrice());
     }
 
     @AfterClass
+    @Step("9. Закрытие браузера")
     public static void tearDown() {
-       // driver.quit();
+         driver.quit();
         }
 
 }
